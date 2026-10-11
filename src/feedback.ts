@@ -9,7 +9,7 @@ export function feedback(
   if (!sound || typeof window === 'undefined') return;
   try {
     context ??= new AudioContext();
-    void context.resume();
+    void context.resume().catch(() => {});
     const notes =
       kind === 'celebrate'
         ? [523.25, 659.25, 783.99, 1046.5]

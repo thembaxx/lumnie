@@ -1,0 +1,57 @@
+{
+  "id": "/",
+  "name": "Lumni — A little more curious",
+  "short_name": "Lumni",
+  "lang": "en-ZA",
+  "description": "Hands-on STEM learning for South African learners, with offline 3D labs, quizzes and puzzles.",
+  "start_url": "/#/today",
+  "scope": "/",
+  "display": "standalone",
+  "display_override": [
+    "standalone",
+    "minimal-ui"
+  ],
+  "theme_color": "#18191d",
+  "background_color": "#18191d",
+  "categories": [
+    "education",
+    "games"
+  ],
+  "icons": [
+    {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Learn something new",
+      "short_name": "Learn",
+      "url": "/#/learn"
+    },
+    {
+      "name": "Open the 3D playground",
+      "short_name": "3D labs",
+      "url": "/#/labs"
+    },
+    {
+      "name": "Play a challenge",
+      "short_name": "Challenges",
+      "url": "/#/play"
+    }
+  ]
+}

@@ -41,6 +41,7 @@ import {
   Leaf,
   Heart,
   Info,
+  ShareNetwork,
 } from '@phosphor-icons/react';
 import {
   subjects,
@@ -53,10 +54,15 @@ import {
 import { Quiz, Puzzle } from './Activities';
 import { feedback } from './feedback';
 import MathText from './MathText';
+import { useAppearance } from './useAppearance';
+import { useAppNavigation, type Page } from './useAppNavigation';
+import { usePwa } from './usePwa';
+import { shareLink, useWakeLock, useNativeViewport } from './useNative';
+import { AppStatus, NativeSettings } from './NativeSettings';
 const Scene = dynamic(() => import('./Scene'), {
   ssr: false,
   loading: () => (
-    <div className="scene-loading">
+    <div className="scene-loading" role="status" aria-label="Loading interactive diagram">
       <Atom weight="thin" />
     </div>
   ),
@@ -64,21 +70,12 @@ const Scene = dynamic(() => import('./Scene'), {
 const Delight = dynamic(() => import('./Delight'), { ssr: false });
 const PatternGame = dynamic(() => import('./PatternGame'), {
   ssr: false,
-  loading: () => <div className="game-loading">Growing your number garden…</div>,
+  loading: () => (
+    <div className="game-loading" role="status">
+      Growing your number garden…
+    </div>
+  ),
 });
-type Page = 'today' | 'learn' | 'labs' | 'play' | 'progress';
-type Modal =
-  | 'onboarding'
-  | 'lesson'
-  | 'quiz'
-  | 'puzzle'
-  | 'game'
-  | 'settings'
-  | 'design'
-  | 'sources'
-  | 'notifications'
-  | 'goal'
-  | null;
 type Profile = { name: string; grade: number; goal: number; onboarded: boolean };
 type Progress = {
   xp: number;
@@ -420,12 +417,14 @@ function LessonView({
   onComplete,
   onQuiz,
   onFeedback,
+  onShare,
 }: {
   lesson: Lesson;
   completed: boolean;
   onComplete: () => void;
   onQuiz: () => void;
   onFeedback: () => void;
+  onShare: () => void;
 }) {
   const [playing, setPlaying] = useState(true),
     [value, setValue] = useState(
@@ -454,6 +453,10 @@ function LessonView({
         </span>
         <h2>{lesson.title}</h2>
         <p className="muted">{lesson.description}</p>
+        <button className="button small lesson-share" onClick={onShare}>
+          <ShareNetwork />
+          Share this discovery
+        </button>
       </div>
       {isLab ? (
         <div className={`lab-view ${subjects.find((s) => s.id === lesson.subject)!.color}`}>
@@ -728,9 +731,24 @@ function WeeklyRing({ count = 3 }: { count?: number }) {
 }
 
 export default function LumniApp() {
-  const [page, setPage] = useState<Page>('today'),
-    [modal, setModal] = useState<Modal>(null),
-    [profile, setProfile] = useState<Profile>({
+  const {
+    page,
+    setPage,
+    modal,
+    setModal,
+    close,
+    lesson,
+    setLesson,
+    quizSubject,
+    setQuizSubject,
+    puzzleIndex,
+    setPuzzleIndex,
+  } = useAppNavigation();
+  const { theme, preference, setTheme, designB, setDesignB } = useAppearance();
+  const pwa = usePwa();
+  useNativeViewport();
+  const wake = useWakeLock(['lesson', 'quiz', 'puzzle', 'game'].includes(modal || ''));
+  const [profile, setProfile] = useState<Profile>({
       name: 'Thando',
       grade: 10,
       goal: 10,
@@ -738,20 +756,14 @@ export default function LumniApp() {
     }),
     [progress, setProgress] = useState<Progress>(emptyProgress),
     [hydrated, setHydrated] = useState(false);
-  const [theme, setTheme] = useState<'light' | 'dark'>('light'),
-    [sound, setSound] = useState(true),
+  const [sound, setSound] = useState(true),
     [haptics, setHaptics] = useState(true),
     [filter, setFilter] = useState<Subject | 'all'>('all'),
     [query, setQuery] = useState(''),
-    [lesson, setLesson] = useState(lessons[0]),
-    [quizSubject, setQuizSubject] = useState<Subject>('maths'),
-    [puzzleIndex, setPuzzleIndex] = useState(0),
     [toast, setToast] = useState(''),
     [confetti, setConfetti] = useState(0),
-    [notificationSeen, setNotificationSeen] = useState(false),
-    [designB, setDesignB] = useState(false);
+    [notificationSeen, setNotificationSeen] = useState(false);
   const reduced = useReducedMotion();
-  const close = useCallback(() => setModal(null), []);
   useEffect(() => {
     try {
       const raw = localStorage.getItem('lumni-playground-v1');
@@ -760,7 +772,6 @@ export default function LumniApp() {
         if (v.profile?.name && [10, 11, 12].includes(v.profile.grade)) setProfile(v.profile);
         if (v.progress && Array.isArray(v.progress.completed) && typeof v.progress.xp === 'number')
           setProgress(v.progress);
-        if (v.theme === 'dark') setTheme('dark');
         if (typeof v.sound === 'boolean') setSound(v.sound);
         if (typeof v.haptics === 'boolean') setHaptics(v.haptics);
       }
@@ -774,14 +785,13 @@ export default function LumniApp() {
       try {
         localStorage.setItem(
           'lumni-playground-v1',
-          JSON.stringify({ profile, progress, theme, sound, haptics }),
+          JSON.stringify({ profile, progress, sound, haptics }),
         );
       } catch {
         /* Browser storage is optional. */
       }
     }
-    document.documentElement.dataset.theme = theme;
-  }, [profile, progress, theme, sound, haptics, hydrated]);
+  }, [profile, progress, sound, haptics, hydrated]);
   useEffect(() => {
     if (!toast) return;
     const timeout = setTimeout(() => setToast(''), 3500);
@@ -1010,6 +1020,13 @@ export default function LumniApp() {
               {theme === 'light' ? <Sun size={22} /> : <Moon size={22} />}
             </button>
             <button
+              className="icon-button mobile-settings-button"
+              onClick={() => setModal('settings')}
+              aria-label="Settings"
+            >
+              <GearSix size={22} />
+            </button>
+            <button
               className="icon-button notification-button"
               onClick={() => {
                 setModal('notifications');
@@ -1030,6 +1047,7 @@ export default function LumniApp() {
           </div>
         </header>
         <main className="main-content relative" id="main-content">
+          <AppStatus pwa={pwa} />
           <div className="page-heading">
             <div>
               <span className="eyebrow">
@@ -1860,6 +1878,7 @@ export default function LumniApp() {
             )}
             {modal === 'lesson' && (
               <LessonView
+                key={lesson.id}
                 lesson={lesson}
                 completed={progress.completed.includes(lesson.id)}
                 onComplete={() => {
@@ -1868,13 +1887,25 @@ export default function LumniApp() {
                 }}
                 onQuiz={() => openQuiz(lesson.subject)}
                 onFeedback={() => feel('tap')}
+                onShare={() =>
+                  void shareLink(lesson.title, `/lesson/${lesson.id}`).then((message) => {
+                    if (message) setToast(message);
+                  })
+                }
               />
             )}
             {modal === 'quiz' && (
-              <Quiz subject={quizSubject} onFeedback={feel} onComplete={complete} onClose={close} />
+              <Quiz
+                key={quizSubject}
+                subject={quizSubject}
+                onFeedback={feel}
+                onComplete={complete}
+                onClose={close}
+              />
             )}
             {modal === 'puzzle' && (
               <Puzzle
+                key={puzzleIndex}
                 puzzleIndex={puzzleIndex}
                 onFeedback={feel}
                 onComplete={complete}
@@ -1895,17 +1926,20 @@ export default function LumniApp() {
                     </span>
                     <span>
                       <strong>A different kind of light</strong>
-                      <small>Switch between light and dark</small>
+                      <small>Follow your device or choose your own</small>
                     </span>
-                    <button
-                      className="toggle"
-                      role="switch"
-                      aria-checked={theme === 'dark'}
-                      aria-label="Dark theme"
-                      onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}
+                    <select
+                      className="theme-select"
+                      aria-label="App appearance"
+                      value={preference}
+                      onChange={(event) =>
+                        setTheme(event.target.value as 'system' | 'light' | 'dark')
+                      }
                     >
-                      <span />
-                    </button>
+                      <option value="system">System</option>
+                      <option value="light">Light</option>
+                      <option value="dark">Dark</option>
+                    </select>
                   </div>
                   <div className="setting-row">
                     <span className="setting-icon peach">
@@ -1950,6 +1984,15 @@ export default function LumniApp() {
                     </button>
                   </div>
                 </div>
+                <NativeSettings
+                  pwa={pwa}
+                  wake={wake}
+                  onShare={() =>
+                    void shareLink('Lumni — A little more curious', '/today').then((message) => {
+                      if (message) setToast(message);
+                    })
+                  }
+                />
                 <div className="settings-links">
                   <button onClick={() => setModal('onboarding')}>
                     <GraduationCap />
@@ -1977,7 +2020,7 @@ export default function LumniApp() {
                     <Sparkle weight="fill" />
                     lumni.
                   </span>
-                  <span>A little more possible. Version 1.0</span>
+                  <span>A little more possible. Version 1.1</span>
                 </div>
               </div>
             )}
