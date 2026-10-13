@@ -1919,6 +1919,9 @@ export default function LumniApp() {
               <div className="settings-content">
                 <h2>The little details matter.</h2>
                 <p className="muted">Make Lumni feel a little more like you.</p>
+                <p>
+                  <a href="/about/">About Lumni, sources & privacy</a>
+                </p>
                 <div className="settings-group">
                   <div className="setting-row">
                     <span className="setting-icon lilac">
