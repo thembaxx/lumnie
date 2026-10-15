@@ -73,3 +73,7 @@ pnpm test:e2e
 ```
 
 For a system Chromium binary, set `LUMNI_CHROMIUM_PATH=/path/to/chromium`.
+
+## Brand and discovery
+
+See [BRAND.md](BRAND.md) for Lumni’s positioning and canonical-origin configuration. Search and social metadata, structured data, the public `/about/` page and AI documentation use the same brand source. `/llms.txt` and `/llm.txt` return the same public index; `/llms-full.txt` supplies fuller context. Private device records never enter discovery content.

@@ -1,5 +1,7 @@
 import type { Metadata, Viewport } from 'next';
 import { appearanceBoot } from '../appearance';
+import { brand } from '../lib/brand';
+import { siteOrigin, pageMetadata, structuredData, jsonLd } from '../lib/site';
 import '@fontsource/dm-sans/400.css';
 import '@fontsource/dm-sans/500.css';
 import '@fontsource/dm-sans/600.css';
@@ -8,20 +10,15 @@ import '@fontsource/fraunces/500.css';
 import 'katex/dist/katex.min.css';
 import './globals.css';
 export const metadata: Metadata = {
-  title: 'Lumni — A little more curious',
-  description:
-    'Hands-on STEM learning for South African learners. Discover interactive 3D labs, playful quizzes and daily puzzles.',
-  applicationName: 'Lumni',
+  ...pageMetadata(brand.title, '/'),
+  metadataBase: siteOrigin ? new URL(siteOrigin) : undefined,
+  applicationName: brand.name,
+  category: 'education',
+  robots: { index: Boolean(siteOrigin), follow: true },
   manifest: '/manifest-playground-light.webmanifest',
-  appleWebApp: { capable: true, title: 'Lumni', statusBarStyle: 'black-translucent' },
+  appleWebApp: { capable: true, title: brand.name, statusBarStyle: 'black-translucent' },
   formatDetection: { telephone: false },
-  icons: {
-    icon: [
-      { url: '/favicon.svg', type: 'image/svg+xml' },
-      { url: '/icons/icon-192.png', sizes: '192x192', type: 'image/png' },
-    ],
-    apple: [{ url: '/icons/apple-touch-icon.png', sizes: '180x180', type: 'image/png' }],
-  },
+  icons: { icon: '/favicon.svg', apple: '/icons/apple-touch-icon.png' },
 };
 export const viewport: Viewport = {
   width: 'device-width',
@@ -37,6 +34,11 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   return (
     <html lang="en-ZA" suppressHydrationWarning>
       <head>
+        <link rel="describedby" type="text/plain" href="/llms.txt" />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: jsonLd(structuredData()) }}
+        />
         <script dangerouslySetInnerHTML={{ __html: appearanceBoot }} />
       </head>
       <body data-lumni-app="true">{children}</body>
