@@ -1,5 +1,10 @@
 # Lumni Playground
 
+> **Portfolio project** · [Live application](https://lumnie.vercel.app) · [GitHub source](https://github.com/thembaxx/lumnie)
+>
+> Built with a focus on intuitive interfaces, responsive design and practical product engineering. Explore the live experience or review the implementation below.
+
+
 [Open the live app](https://lumni-playground.sillykoala8.chatgpt.site)
 
 A working, responsive STEM learning app for South African learners. Option A uses warm ivory, soft subject colours, squircle cards, Phosphor icons, and a floating mobile dock. Option B is an alternate visual direction available from Settings → Explore the design directions.
