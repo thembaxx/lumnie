@@ -1,5 +1,29 @@
 # Lumni Playground
 
+A STEM learning playground for South African Grade 10–12 learners, combining short lessons, quizzes and interactive models.
+
+**[Explore the live application](https://lumnie.vercel.app/#/today)** · [Browse the source](https://github.com/thembaxx/lumnie)
+
+## Engineering highlights
+
+Static export, browser-local learning progress, offline downloads, keyboard alternatives and mathematical notation.
+
+## Technology
+
+Declared in [package.json](package.json): Next.js `16.4.0` · React `19.3.0` · TypeScript `7.0.2` · Tailwind CSS `4.3.3` · Three.js `0.186.1` · Framer Motion `14.0.0` · PixiJS `8.22.0` · KaTeX `0.19.0`.
+
+**Quality tooling:** `lint`, `format:check`, `typecheck`, `test:e2e` scripts are available. See the setup guide below for prerequisites; this documentation pass does not assert that those checks were run.
+
+## Application preview
+
+![Lumni Playground — desktop application](docs/screenshots/desktop.jpg)
+
+Captured from the live application on 17 October 2026. [Capture details and limitations](docs/screenshots/README.md).
+
+---
+
+## Project guide
+
 [Open the live app](https://lumni-playground.sillykoala8.chatgpt.site)
 
 A working, responsive STEM learning app for South African learners. Option A uses warm ivory, soft subject colours, squircle cards, Phosphor icons, and a floating mobile dock. Option B is an alternate visual direction available from Settings → Explore the design directions.
