@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from 'next';
+import { Analytics } from '@vercel/analytics/next';
 import { appearanceBoot } from '../appearance';
 import { brand } from '../lib/brand';
 import { siteOrigin, pageMetadata, structuredData, jsonLd } from '../lib/site';
@@ -41,7 +42,10 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         />
         <script dangerouslySetInnerHTML={{ __html: appearanceBoot }} />
       </head>
-      <body data-lumni-app="true">{children}</body>
+      <body data-lumni-app="true">
+        {children}
+        <Analytics />
+      </body>
     </html>
   );
 }
