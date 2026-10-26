@@ -8,10 +8,10 @@
   --bg: #faf9f6;
   --surface: #fff;
   --ink: #29272f;
-  --muted: #8c8991;
+  --muted: #6e6a76;
   --subtle: #6e6a76;
   --line: #eeece9;
-  --brand: #7d66ca;
+  --brand: #6950ad;
   --brand-soft: #eeebf7;
   --lilac: #eeebf8;
   --peach: #fbede3;
@@ -653,8 +653,8 @@ button {
   color: #655776;
 }
 .button.small.active {
-  background: #b7a1e9;
-  color: #fff;
+  background: var(--brand-soft);
+  color: var(--brand);
 }
 .button.full {
   width: 100%;
@@ -2878,7 +2878,7 @@ button {
 .answer.incorrect {
   background: #f9eded;
   border-color: #ddb7b7;
-  color: #b87b7b;
+  color: #9c4e4e;
 }
 .answer > svg {
   width: 18px;
@@ -4095,7 +4095,7 @@ button {
     corner-shape: squircle;
   }
   .mobile-dock button > span {
-    font-size: 7px;
+    font-size: 11px;
   }
   .mobile-dock button.active {
     color: var(--brand);
