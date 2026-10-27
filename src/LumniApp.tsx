@@ -59,6 +59,7 @@ import { useAppNavigation, type Page } from './useAppNavigation';
 import { usePwa } from './usePwa';
 import { shareLink, useWakeLock, useNativeViewport } from './useNative';
 import { AppStatus, NativeSettings } from './NativeSettings';
+import { ObjectivePathway } from './ObjectivePathway';
 const Scene = dynamic(() => import('./Scene'), {
   ssr: false,
   loading: () => (
@@ -1565,6 +1566,12 @@ export default function LumniApp() {
                       <Sparkle size={27} weight="fill" />
                     </div>
                   </section>
+                  <ObjectivePathway
+                    onOpenLesson={(id) => {
+                      const pathwayLesson = lessons.find((item) => item.id === id);
+                      if (pathwayLesson) openLesson(pathwayLesson);
+                    }}
+                  />
                   <div className="section-heading">
                     <h2>A quick quiz, a little confidence</h2>
                     <span className="small-muted">5 questions · up to 50 XP</span>
