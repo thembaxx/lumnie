@@ -1,10 +1,17 @@
 'use client';
 import { useEffect, useRef } from 'react';
+import { getDelightQuality } from './delight-quality';
 export default function Delight({ trigger }: { trigger: number }) {
   const host = useRef<HTMLDivElement>(null);
   useEffect(() => {
-    if (!trigger || !host.current || window.matchMedia('(prefers-reduced-motion: reduce)').matches)
-      return;
+    if (!trigger || !host.current) return;
+    const quality = getDelightQuality({
+      viewportWidth: window.innerWidth,
+      devicePixelRatio: window.devicePixelRatio || 1,
+      coarsePointer: window.matchMedia('(pointer: coarse)').matches,
+      reducedMotion: window.matchMedia('(prefers-reduced-motion: reduce)').matches,
+    });
+    if (quality.particles === 0 || document.hidden) return;
     let cancelled = false;
     let app: import('pixi.js').Application | undefined;
     async function run() {
@@ -16,8 +23,8 @@ export default function Delight({ trigger }: { trigger: number }) {
           width: window.innerWidth,
           height: window.innerHeight,
           backgroundAlpha: 0,
-          antialias: true,
-          resolution: Math.min(window.devicePixelRatio, 1.5),
+          antialias: quality.antialias,
+          resolution: quality.resolution,
           preference: 'webgpu',
         });
         if (cancelled) {
@@ -26,7 +33,7 @@ export default function Delight({ trigger }: { trigger: number }) {
         }
         host.current?.appendChild(app.canvas);
         const colors = [0x8b71e6, 0xf6b186, 0xa1d7c4, 0xf2d785, 0x91bfe5];
-        const particles = Array.from({ length: 70 }, (_, i) => {
+        const particles = Array.from({ length: quality.particles }, (_, i) => {
           const g = new Graphics();
           if (i % 3) g.roundRect(-4, -7, 8, 14, 3).fill(colors[i % 5]);
           else g.circle(0, 0, 5).fill(colors[i % 5]);
