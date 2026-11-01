@@ -57,7 +57,13 @@ export default function Scene({
       geometries: THREE.BufferGeometry[] = [],
       textures: THREE.Texture[] = [];
     const mat = (color: number, roughness = 0.3) => {
-      const m = new THREE.MeshStandardMaterial({ color, roughness, metalness: 0.08 });
+      const m = new THREE.MeshPhysicalMaterial({
+        color,
+        roughness,
+        metalness: 0.08,
+        clearcoat: 0.32,
+        clearcoatRoughness: 0.24,
+      });
       materials.push(m);
       return m;
     };
