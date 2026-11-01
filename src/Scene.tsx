@@ -66,7 +66,8 @@ export default function Scene({
         metalness: 0.08,
         clearcoat: 0.35,
         iridescence: 0.12,
-        iridescenceThicknessMinimum: 100, iridescenceThicknessMaximum: 195,
+        iridescenceThicknessMinimum: 100,
+        iridescenceThicknessMaximum: 195,
       });
       materials.push(m);
       return m;
