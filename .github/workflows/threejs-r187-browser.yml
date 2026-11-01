@@ -1,0 +1,26 @@
+name: Three.js r187 browser QA
+on:
+  pull_request:
+    paths:
+      - "src/Scene.tsx"
+      - "package.json"
+      - "pnpm-lock.yaml"
+      - ".github/workflows/threejs-r187-browser.yml"
+permissions:
+  contents: read
+jobs:
+  scene:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile --ignore-scripts
+      - run: pnpm build
+      - run: pnpm exec playwright install --with-deps chromium
+      - run: pnpm test:e2e
