@@ -53,11 +53,14 @@ export default function Scene({
     const fill = new THREE.DirectionalLight(0xffe3cf, 2);
     fill.position.set(3, -2, 2);
     scene.add(fill);
+    const rim = new THREE.DirectionalLight(0xa9e9d9, 1.1);
+    rim.position.set(1, 3, -4);
+    scene.add(rim);
     const materials: THREE.Material[] = [],
       geometries: THREE.BufferGeometry[] = [],
       textures: THREE.Texture[] = [];
     const mat = (color: number, roughness = 0.3) => {
-      const m = new THREE.MeshStandardMaterial({ color, roughness, metalness: 0.08 });
+      const m = new THREE.MeshPhysicalMaterial({ color, roughness, metalness: 0.08, clearcoat: 0.35, iridescence: 0.12, iridescenceThicknessRange: [100, 195] });
       materials.push(m);
       return m;
     };
