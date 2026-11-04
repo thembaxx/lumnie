@@ -8,6 +8,10 @@
     top: max(12px, env(safe-area-inset-top, 0px));
   }
 }
+.lab-card-body > div:first-child {
+  flex: 1 1 auto;
+  min-width: 0;
+}
 .lab-expand-button {
   flex: 0 0 44px;
   width: 44px;
