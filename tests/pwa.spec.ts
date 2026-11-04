@@ -49,6 +49,8 @@ test('system appearance follows the OS while an explicit choice persists', async
     .get('/manifest-playground-dark.webmanifest')
     .then((response) => response.json());
   expect(manifest.background_color).toBe('#18191d');
+  expect(manifest.display).toBe('standalone');
+  expect(manifest.display_override).toEqual(['standalone', 'minimal-ui']);
   expect(manifest.theme_color).toBe('#18191d');
   expect(
     manifest.icons.find((icon: { purpose: string }) => icon.purpose === 'maskable').sizes,
@@ -297,5 +299,16 @@ test('a downloaded update waits until requested and keeps a quiz intact', async 
     await expect(page.locator('.main-content')).toBeVisible();
   } finally {
     await writeFile(file, original);
+  }
+});
+
+
+test('only individual 3D labs offer user-initiated fullscreen where supported', async ({ page }) => {
+  await page.goto('/#/labs');
+  const fullscreen = page.getByRole('button', { name: 'Make A whole world inside an atom fullscreen' });
+  if (await page.evaluate(() => document.fullscreenEnabled === true)) {
+    await expect(fullscreen).toBeVisible();
+  } else {
+    await expect(fullscreen).toHaveCount(0);
   }
 });
