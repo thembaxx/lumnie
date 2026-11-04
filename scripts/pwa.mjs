@@ -37,7 +37,7 @@ if (process.argv[2] === 'prepare') {
         start_url: '/#/today',
         scope: '/',
         display: 'standalone',
-        display_override: ['standalone', 'minimal-ui'],
+        display_override: ['fullscreen', 'standalone'],
         theme_color: color,
         background_color: color,
         categories: ['education', 'games'],
