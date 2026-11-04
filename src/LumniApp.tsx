@@ -60,6 +60,7 @@ import { usePwa } from './usePwa';
 import { shareLink, useWakeLock, useNativeViewport } from './useNative';
 import { AppStatus, NativeSettings } from './NativeSettings';
 import { ObjectivePathway } from './ObjectivePathway';
+import { LabFullscreenButton } from './LabFullscreenButton';
 const Scene = dynamic(() => import('./Scene'), {
   ssr: false,
   loading: () => (
@@ -1519,6 +1520,7 @@ export default function LumniApp() {
                             <h3>{l.title}</h3>
                             <p>{l.detail}</p>
                           </div>
+                          <LabFullscreenButton title={l.title} />
                           <button
                             className="round-button"
                             onClick={() => openLesson(lessons.find((x) => x.id === l.id)!)}
