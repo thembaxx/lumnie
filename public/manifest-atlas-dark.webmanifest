@@ -8,8 +8,8 @@
   "scope": "/",
   "display": "standalone",
   "display_override": [
-    "standalone",
-    "minimal-ui"
+    "fullscreen",
+    "standalone"
   ],
   "theme_color": "#181d1b",
   "background_color": "#181d1b",
