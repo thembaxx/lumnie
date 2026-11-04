@@ -1,6 +1,8 @@
 /* Installed Lumni: lessons remain scrollable; individual 3D labs can be immersive. */
 @media (display-mode: standalone) {
-  html, body, .app-shell {
+  html,
+  body,
+  .app-shell {
     min-height: 100dvh;
     background: var(--bg);
   }
