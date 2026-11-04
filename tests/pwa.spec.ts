@@ -302,10 +302,11 @@ test('a downloaded update waits until requested and keeps a quiz intact', async 
   }
 });
 
-
-test('only individual 3D labs offer user-initiated fullscreen where supported', async ({ page }) => {
+test('3D labs expose opt-in fullscreen where supported', async ({ page }) => {
   await page.goto('/#/labs');
-  const fullscreen = page.getByRole('button', { name: 'Make A whole world inside an atom fullscreen' });
+  const fullscreen = page.getByRole('button', {
+    name: 'Make A whole world inside an atom fullscreen',
+  });
   if (await page.evaluate(() => document.fullscreenEnabled === true)) {
     await expect(fullscreen).toBeVisible();
   } else {
