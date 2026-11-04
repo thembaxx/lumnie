@@ -46,7 +46,9 @@ export function LabFullscreenButton({ title }: { title: string }) {
       >
         {active ? <CornersIn size={22} /> : <CornersOut size={22} />}
       </button>
-      <span className="sr-only" role="status">{notice}</span>
+      <span className="sr-only" role="status">
+        {notice}
+      </span>
     </>
   );
 }
