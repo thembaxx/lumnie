@@ -10,6 +10,7 @@ import '@fontsource/dm-sans/700.css';
 import '@fontsource/fraunces/500.css';
 import 'katex/dist/katex.min.css';
 import './globals.css';
+import './native-shell.css';
 export const metadata: Metadata = {
   ...pageMetadata(brand.title, '/'),
   metadataBase: siteOrigin ? new URL(siteOrigin) : undefined,
