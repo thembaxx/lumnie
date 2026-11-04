@@ -397,7 +397,7 @@ button {
   background: none;
   color: var(--ink);
   outline: none;
-  font-size: 10.5px;
+  font-size: max(10.5px, var(--touch-input-font-min, 0px));
   width: 100%;
   min-width: 0;
 }
@@ -5493,7 +5493,7 @@ button {
   color: var(--ink);
   padding: 10px;
   min-height: 44px;
-  font-size: 14px;
+  font-size: max(14px, var(--touch-input-font-min, 0px));
   max-width: 104px;
 }
 .native-settings {
@@ -5842,4 +5842,10 @@ button {
 }
 .public-overview footer {
   margin-top: 2rem;
+}
+
+@media (pointer: coarse) {
+  :root {
+    --touch-input-font-min: 16px;
+  }
 }
