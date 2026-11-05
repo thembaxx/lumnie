@@ -5911,3 +5911,26 @@ button {
     top: 10px;
   }
 }
+
+/* Readable mobile learning controls without enlarging decorative scene labels. */
+@media (max-width: 600px) {
+  .hero-eyebrow,
+  .hero-meta,
+  .coordinate-readout,
+  .daily-puzzle-meta,
+  .recommend-content .small-muted {
+    font-size: 12px;
+    line-height: 1.5;
+    overflow-wrap: anywhere;
+  }
+  .hero-text p,
+  .recommend-content p,
+  .subject-card h3 {
+    font-size: 14px;
+    line-height: 1.5;
+    overflow-wrap: anywhere;
+  }
+  .lab-toolbar .button {
+    font-size: 14px;
+  }
+}
