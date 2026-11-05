@@ -5849,3 +5849,65 @@ button {
     --touch-input-font-min: 16px;
   }
 }
+
+/* Visual audit: real dashboard and learning captions must stay readable.
+   Keep tiny text inside decorative 3D illustrations unchanged. */
+.daily-puzzle-card .eyebrow,
+.daily-puzzle-card > p,
+.daily-puzzle-meta,
+.dashboard-footer,
+.dashboard-footer button {
+  color: var(--muted);
+}
+.daily-puzzle-card .eyebrow,
+.daily-puzzle-meta,
+.dashboard-footer,
+.dashboard-footer button {
+  font-size: 12px;
+  line-height: 1.4;
+}
+.daily-puzzle-card > p {
+  font-size: 13px;
+  line-height: 1.55;
+}
+.chart-caption,
+.lab-caption,
+.design-caption {
+  font-size: 12px;
+  line-height: 1.45;
+}
+@media (max-width: 600px) {
+  .hero-eyebrow,
+  .hero-meta,
+  .subject-card > div > span,
+  .recommend-content .small-muted,
+  .recommended,
+  .week-days > div > span,
+  .coordinate-readout {
+    font-size: 11px;
+    line-height: 1.4;
+  }
+  .hero-text p,
+  .recommend-content p,
+  .recommend-link,
+  .lab-slider {
+    font-size: 12px;
+    line-height: 1.5;
+  }
+  .subject-card h3,
+  .recommend-content h3 {
+    font-size: 13px;
+    line-height: 1.35;
+  }
+  .lab-toolbar .button {
+    font-size: 12px;
+    min-height: 44px;
+  }
+  .lab-toolbar {
+    flex-wrap: wrap;
+  }
+  .lab-caption {
+    bottom: auto;
+    top: 10px;
+  }
+}
