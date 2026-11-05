@@ -1,5 +1,9 @@
 import { expect, test } from '@playwright/test';
-import { isSoftwareSceneRenderer, sceneFrameEnabled, sceneRenderBudget } from '../src/scene-quality';
+import {
+  isSoftwareSceneRenderer,
+  sceneFrameEnabled,
+  sceneRenderBudget,
+} from '../src/scene-quality';
 
 test('retina desktop scene keeps 2x definition without oversampling', () => {
   const quality = sceneRenderBudget({

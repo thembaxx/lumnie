@@ -363,7 +363,11 @@ export default function Scene({
       previousExploded = false;
     const animate = (now: number) => {
       frame = 0;
-      if (!renderer || !sceneFrameEnabled({ visible, hidden: document.hidden, disposed, rendererReady: true })) return;
+      if (
+        !renderer ||
+        !sceneFrameEnabled({ visible, hidden: document.hidden, disposed, rendererReady: true })
+      )
+        return;
       frame = requestAnimationFrame(animate);
       if (now - last < 32) return;
       const dt = Math.min((now - last) / 1000, 0.05);
@@ -446,7 +450,16 @@ export default function Scene({
     const resumeFrame = () => {
       // A learning scene does not need a running RAF when outside the viewport
       // or in a background tab. Restart with a fresh clock to avoid a jump.
-      if (frame || !sceneFrameEnabled({ visible, hidden: document.hidden, disposed, rendererReady: Boolean(renderer) })) return;
+      if (
+        frame ||
+        !sceneFrameEnabled({
+          visible,
+          hidden: document.hidden,
+          disposed,
+          rendererReady: Boolean(renderer),
+        })
+      )
+        return;
       last = performance.now();
       frame = requestAnimationFrame(animate);
     };
