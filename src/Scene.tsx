@@ -487,8 +487,8 @@ export default function Scene({
     async function init() {
       try {
         const initialBudget = sceneRenderBudget({
-          width: container.clientWidth,
-          height: container.clientHeight,
+          width: container!.clientWidth,
+          height: container!.clientHeight,
           pixelRatio: window.devicePixelRatio,
           coarsePointer: window.matchMedia('(pointer: coarse)').matches,
           softwareRenderer: false,
