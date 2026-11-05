@@ -4,12 +4,12 @@ Lumni provides an initial, app-local motion foundation in [src/MotionSurface.tsx
 
 ## Contracts
 
-- \`page\`: navigating between primary views.
-- \`step\`: changing an onboarding step.
-- \`backdrop\` and \`dialog\`: modal presentation; existing focus management, Escape handling and body scroll locking remain in the Dialog component.
-- \`toast\`: short-lived feedback.
+- `page`: navigating between primary views.
+- `step`: changing an onboarding step.
+- `backdrop` and `dialog`: modal presentation; existing focus management, Escape handling and body scroll locking remain in the Dialog component.
+- `toast`: short-lived feedback.
 
-Every surface is plain content when \`prefers-reduced-motion: reduce\` is active. Its motion preset sets \`initial: false\` and a zero-duration transition, rather than relying on CSS to override JavaScript animation. The only two diagnostics attributes are \`data-motion-intent\` and \`data-motion-reduced\`.
+Every surface is plain content when `prefers-reduced-motion: reduce` is active. Its motion preset sets `initial: false` and a zero-duration transition, rather than relying on CSS to override JavaScript animation. The only two diagnostics attributes are `data-motion-intent` and `data-motion-reduced`.
 
 ## Reuse guidance
 
@@ -24,6 +24,6 @@ These are **patterns**, not a new cross-repository package. When adopting in Cit
 
 ## Verification
 
-Run \`pnpm lint\`, \`pnpm format:check\`, \`pnpm typecheck\`, \`pnpm build\`, and \`pnpm exec playwright test tests/motion-foundations.spec.ts\`. The regression covers reduced and standard motion while exercising live pages, accessible dialogs and focus.
+Run `pnpm lint`, `pnpm format:check`, `pnpm typecheck`, `pnpm build`, and `pnpm exec playwright test tests/motion-foundations.spec.ts`. The regression covers reduced and standard motion while exercising live pages, accessible dialogs and focus.
 
 Performance acceptance: no new dependency, unnecessary render loop, or permanent animation; keep animations under 300 ms aside from the existing restrained dialog spring. Accessibility acceptance: content visible immediately with reduced motion and all actions still available by keyboard and touch.
