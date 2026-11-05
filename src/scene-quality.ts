@@ -28,3 +28,18 @@ export function sceneRenderBudget({
     cameraDistance: Math.min(17, 9.4 * Math.max(1, 0.96 / Math.max(0.5, aspect))),
   };
 }
+
+/** Offscreen and background scenes must not keep scheduling animation frames. */
+export function sceneFrameEnabled({
+  visible,
+  hidden,
+  disposed,
+  rendererReady,
+}: {
+  visible: boolean;
+  hidden: boolean;
+  disposed: boolean;
+  rendererReady: boolean;
+}): boolean {
+  return visible && !hidden && !disposed && rendererReady;
+}
