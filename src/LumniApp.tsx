@@ -2,6 +2,7 @@
 import { useEffect, useRef, useState, useCallback, type ReactNode } from 'react';
 import dynamic from 'next/dynamic';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
+import { MotionSurface } from './MotionSurface';
 import {
   ArrowLeft,
   ArrowRight,
@@ -241,26 +242,21 @@ function Dialog({
     };
   }, [onClose]);
   return (
-    <motion.div
+    <MotionSurface
+      intent="backdrop"
       className="dialog-backdrop"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
     >
-      <motion.div
+      <MotionSurface
+        intent="dialog"
         className={`dialog ${wide ? 'dialog-wide' : ''}`}
         ref={ref}
         tabIndex={-1}
         role="dialog"
         aria-modal="true"
         aria-labelledby="dialog-title"
-        initial={{ opacity: 0, y: 24, scale: 0.97 }}
-        animate={{ opacity: 1, y: 0, scale: 1 }}
-        exit={{ opacity: 0, y: 16, scale: 0.98 }}
-        transition={{ type: 'spring', damping: 29, stiffness: 350 }}
       >
         <div className="dialog-header">
           <div className="dialog-brand">
@@ -272,8 +268,8 @@ function Dialog({
           </button>
         </div>
         {children}
-      </motion.div>
-    </motion.div>
+      </MotionSurface>
+    </MotionSurface>
   );
 }
 
@@ -290,12 +286,7 @@ function Onboarding({ profile, onFinish }: { profile: Profile; onFinish: (p: Pro
         ))}
       </div>
       <AnimatePresence mode="wait">
-        <motion.div
-          key={step}
-          initial={{ opacity: 0, x: 20 }}
-          animate={{ opacity: 1, x: 0 }}
-          exit={{ opacity: 0, x: -20 }}
-        >
+        <MotionSurface intent="step" key={step}        >
           <div className={`onboarding-art step-${step}`}>
             <span className="orb orb-one" />
             <span className="orb orb-two" />
@@ -385,7 +376,7 @@ function Onboarding({ profile, onFinish }: { profile: Profile; onFinish: (p: Pro
               ))}
             </div>
           )}
-        </motion.div>
+        </MotionSurface>
       </AnimatePresence>
       <div className="onboarding-footer">
         {step > 0 ? (
@@ -892,11 +883,6 @@ export default function LumniApp() {
     play: 'A fresh challenge. A satisfying puzzle. A little extra spark.',
     progress: 'Every small step counts. Here’s your journey so far.',
   };
-  const motionProps = {
-    initial: { opacity: 0, y: 12 },
-    animate: { opacity: 1, y: 0 },
-    transition: { duration: reduced ? 0 : 0.28 },
-  };
   return (
     <div
       className={`app-shell min-h-screen isolate ${designB ? 'design-atlas' : ''}`}
@@ -1079,7 +1065,7 @@ export default function LumniApp() {
             </div>
           </div>
           <AnimatePresence mode="wait">
-            <motion.div key={page} {...motionProps}>
+            <MotionSurface intent="page" key={page}>
               {page === 'today' && (
                 <div className="dashboard-grid">
                   <div className="dashboard-left">
@@ -1830,7 +1816,7 @@ export default function LumniApp() {
                   </div>
                 </div>
               )}
-            </motion.div>
+            </MotionSurface>
           </AnimatePresence>
         </main>
         <nav className="mobile-dock" aria-label="App navigation">
@@ -2240,19 +2226,13 @@ export default function LumniApp() {
       <Delight trigger={confetti} />
       <AnimatePresence>
         {toast && (
-          <motion.div
-            className="toast"
-            role="status"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 10 }}
-          >
+          <MotionSurface intent="toast" className="toast" role="status"          >
             <Sparkle size={20} weight="fill" />
             {toast}
             <button onClick={() => setToast('')} aria-label="Dismiss message">
               <X size={16} />
             </button>
-          </motion.div>
+          </MotionSurface>
         )}
       </AnimatePresence>
     </div>
