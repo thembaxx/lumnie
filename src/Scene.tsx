@@ -486,27 +486,34 @@ export default function Scene({
     container.addEventListener('keydown', keyboard);
     async function init() {
       try {
+        const initialBudget = sceneRenderBudget({
+          width: container.clientWidth,
+          height: container.clientHeight,
+          pixelRatio: window.devicePixelRatio,
+          coarsePointer: window.matchMedia('(pointer: coarse)').matches,
+          softwareRenderer: false,
+        });
         if ('gpu' in navigator) {
           try {
             const { WebGPURenderer } = await import('three/webgpu');
             if (disposed) return;
             const gpu = new WebGPURenderer({
               alpha: true,
-              antialias: !window.matchMedia('(pointer: coarse)').matches,
+              antialias: initialBudget.antialias,
             });
             await gpu.init();
             renderer = gpu;
           } catch {
             renderer = new THREE.WebGLRenderer({
               alpha: true,
-              antialias: !window.matchMedia('(pointer: coarse)').matches,
+              antialias: initialBudget.antialias,
               powerPreference: 'low-power',
             });
           }
         } else
           renderer = new THREE.WebGLRenderer({
             alpha: true,
-            antialias: !window.matchMedia('(pointer: coarse)').matches,
+            antialias: initialBudget.antialias,
             powerPreference: 'low-power',
           });
         if (disposed) {
