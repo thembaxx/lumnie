@@ -66,17 +66,18 @@ type MotionSurfaceProps = Omit<
   intent: MotionIntent;
 };
 
-export const MotionSurface = forwardRef<HTMLDivElement, MotionSurfaceProps>(
-  function MotionSurface({ intent, ...props }, ref) {
-    const reducedMotion = Boolean(useReducedMotion());
-    return (
-      <motion.div
-        {...props}
-        {...getMotionPreset(intent, reducedMotion)}
-        data-motion-intent={intent}
-        data-motion-reduced={reducedMotion ? 'true' : 'false'}
-        ref={ref}
-      />
-    );
-  },
-);
+export const MotionSurface = forwardRef<HTMLDivElement, MotionSurfaceProps>(function MotionSurface(
+  { intent, ...props },
+  ref,
+) {
+  const reducedMotion = Boolean(useReducedMotion());
+  return (
+    <motion.div
+      {...props}
+      {...getMotionPreset(intent, reducedMotion)}
+      data-motion-intent={intent}
+      data-motion-reduced={reducedMotion ? 'true' : 'false'}
+      ref={ref}
+    />
+  );
+});
