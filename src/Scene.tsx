@@ -1,6 +1,7 @@
 'use client';
 import { useEffect, useRef, useState } from 'react';
 import type { SceneKind } from './data';
+import { isSoftwareSceneRenderer, sceneRenderBudget } from './scene-quality';
 import * as THREE from 'three';
 
 type Props = {
@@ -40,6 +41,7 @@ export default function Scene({
       px = 0,
       py = 0;
     let renderer: THREE.WebGLRenderer | import('three/webgpu').WebGPURenderer | undefined;
+    let softwareRenderer = false;
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(35, 1, 0.1, 50);
     camera.position.set(0, 0, 9.4);
@@ -328,8 +330,17 @@ export default function Scene({
     }
     const resize = () => {
       if (!renderer || !container.clientWidth || !container.clientHeight) return;
+      const budget = sceneRenderBudget({
+        width: container.clientWidth,
+        height: container.clientHeight,
+        pixelRatio: window.devicePixelRatio,
+        coarsePointer: window.matchMedia('(pointer: coarse)').matches,
+        softwareRenderer,
+      });
+      renderer.setPixelRatio(budget.dpr);
       renderer.setSize(container.clientWidth, container.clientHeight);
       camera.aspect = container.clientWidth / container.clientHeight;
+      camera.position.z = budget.cameraDistance;
       camera.updateProjectionMatrix();
       dirty = true;
     };
@@ -479,27 +490,37 @@ export default function Scene({
           try {
             const { WebGPURenderer } = await import('three/webgpu');
             if (disposed) return;
-            const gpu = new WebGPURenderer({ alpha: true, antialias: true });
+            const gpu = new WebGPURenderer({
+              alpha: true,
+              antialias: !window.matchMedia('(pointer: coarse)').matches,
+            });
             await gpu.init();
             renderer = gpu;
           } catch {
             renderer = new THREE.WebGLRenderer({
               alpha: true,
-              antialias: true,
+              antialias: !window.matchMedia('(pointer: coarse)').matches,
               powerPreference: 'low-power',
             });
           }
         } else
           renderer = new THREE.WebGLRenderer({
             alpha: true,
-            antialias: true,
+            antialias: !window.matchMedia('(pointer: coarse)').matches,
             powerPreference: 'low-power',
           });
         if (disposed) {
           renderer.dispose();
           return;
         }
-        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
+        if (renderer instanceof THREE.WebGLRenderer) {
+          const context = renderer.getContext();
+          const debug = context.getExtension('WEBGL_debug_renderer_info');
+          const name = String(
+            context.getParameter(debug ? debug.UNMASKED_RENDERER_WEBGL : context.RENDERER),
+          );
+          softwareRenderer = isSoftwareSceneRenderer(name);
+        }
         renderer.setClearColor(0x000000, 0);
         renderer.outputColorSpace = THREE.SRGBColorSpace;
         container!.appendChild(renderer.domElement);
