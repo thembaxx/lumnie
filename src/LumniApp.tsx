@@ -286,7 +286,7 @@ function Onboarding({ profile, onFinish }: { profile: Profile; onFinish: (p: Pro
         ))}
       </div>
       <AnimatePresence mode="wait">
-        <MotionSurface intent="step" key={step}        >
+        <MotionSurface intent="step" key={step}>
           <div className={`onboarding-art step-${step}`}>
             <span className="orb orb-one" />
             <span className="orb orb-two" />
@@ -2226,7 +2226,7 @@ export default function LumniApp() {
       <Delight trigger={confetti} />
       <AnimatePresence>
         {toast && (
-          <MotionSurface intent="toast" className="toast" role="status"          >
+          <MotionSurface intent="toast" className="toast" role="status">
             <Sparkle size={20} weight="fill" />
             {toast}
             <button onClick={() => setToast('')} aria-label="Dismiss message">
