@@ -1,7 +1,7 @@
 'use client';
 import { useEffect, useRef, useState } from 'react';
 import type { SceneKind } from './data';
-import { isSoftwareSceneRenderer, sceneRenderBudget } from './scene-quality';
+import { isSoftwareSceneRenderer, sceneFrameEnabled, sceneRenderBudget } from './scene-quality';
 import * as THREE from 'three';
 
 type Props = {
@@ -363,7 +363,7 @@ export default function Scene({
       previousExploded = false;
     const animate = (now: number) => {
       frame = 0;
-      if (disposed || !visible || document.hidden || !renderer) return;
+      if (!sceneFrameEnabled({ visible, hidden: document.hidden, disposed, rendererReady: Boolean(renderer) })) return;
       frame = requestAnimationFrame(animate);
       if (now - last < 32) return;
       const dt = Math.min((now - last) / 1000, 0.05);
@@ -446,7 +446,7 @@ export default function Scene({
     const resumeFrame = () => {
       // A learning scene does not need a running RAF when outside the viewport
       // or in a background tab. Restart with a fresh clock to avoid a jump.
-      if (disposed || !renderer || !visible || document.hidden || frame) return;
+      if (frame || !sceneFrameEnabled({ visible, hidden: document.hidden, disposed, rendererReady: Boolean(renderer) })) return;
       last = performance.now();
       frame = requestAnimationFrame(animate);
     };
