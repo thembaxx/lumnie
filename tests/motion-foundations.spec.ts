@@ -14,7 +14,9 @@ async function seedLearner(page: import('@playwright/test').Page) {
   });
 }
 
-test('reduced motion preserves navigation, dialog focus and onboarding controls', async ({ page }) => {
+test('reduced motion preserves navigation, dialog focus and onboarding controls', async ({
+  page,
+}) => {
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await seedLearner(page);
   await page.goto('/#/learn');
@@ -43,7 +45,9 @@ test('reduced motion preserves navigation, dialog focus and onboarding controls'
   await expect(page).toHaveURL(/#\/learn$/);
 });
 
-test('standard motion stays enabled without affecting page or dialog interactions', async ({ page }) => {
+test('standard motion stays enabled without affecting page or dialog interactions', async ({
+  page,
+}) => {
   await page.emulateMedia({ reducedMotion: 'no-preference' });
   await seedLearner(page);
   await page.goto('/#/today');
