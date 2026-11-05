@@ -363,7 +363,7 @@ export default function Scene({
       previousExploded = false;
     const animate = (now: number) => {
       frame = 0;
-      if (!sceneFrameEnabled({ visible, hidden: document.hidden, disposed, rendererReady: Boolean(renderer) })) return;
+      if (!renderer || !sceneFrameEnabled({ visible, hidden: document.hidden, disposed, rendererReady: true })) return;
       frame = requestAnimationFrame(animate);
       if (now - last < 32) return;
       const dt = Math.min((now - last) / 1000, 0.05);
