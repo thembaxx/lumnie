@@ -348,6 +348,12 @@ export default function Scene({
     observer.observe(container);
     const intersection = new IntersectionObserver(([e]) => {
       visible = e.isIntersecting;
+      if (!visible) {
+        cancelAnimationFrame(frame);
+        frame = 0;
+      } else {
+        resumeFrame();
+      }
     });
     intersection.observe(container);
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -356,9 +362,10 @@ export default function Scene({
       previousValue = Number.NaN,
       previousExploded = false;
     const animate = (now: number) => {
-      if (disposed) return;
+      frame = 0;
+      if (disposed || !visible || document.hidden || !renderer) return;
       frame = requestAnimationFrame(animate);
-      if (now - last < 32 || !visible || document.hidden || !renderer) return;
+      if (now - last < 32) return;
       const dt = Math.min((now - last) / 1000, 0.05);
       last = now;
       const state = live.current;
@@ -436,6 +443,22 @@ export default function Scene({
       }
       renderer.render(scene, camera);
     };
+    const resumeFrame = () => {
+      // A learning scene does not need a running RAF when outside the viewport
+      // or in a background tab. Restart with a fresh clock to avoid a jump.
+      if (disposed || !renderer || !visible || document.hidden || frame) return;
+      last = performance.now();
+      frame = requestAnimationFrame(animate);
+    };
+    const onVisibilityChange = () => {
+      if (document.hidden) {
+        cancelAnimationFrame(frame);
+        frame = 0;
+      } else {
+        resumeFrame();
+      }
+    };
+    document.addEventListener('visibilitychange', onVisibilityChange);
     const down = (e: PointerEvent) => {
       pointerDown = true;
       dragged = false;
@@ -534,7 +557,7 @@ export default function Scene({
         resize();
         setReady(true);
         onReady?.(renderer instanceof THREE.WebGLRenderer ? 'WebGL' : 'WebGPU');
-        frame = requestAnimationFrame(animate);
+        resumeFrame();
       } catch {
         if (!disposed) setFailed(true);
       }
@@ -543,6 +566,7 @@ export default function Scene({
     return () => {
       disposed = true;
       cancelAnimationFrame(frame);
+      document.removeEventListener('visibilitychange', onVisibilityChange);
       observer.disconnect();
       intersection.disconnect();
       container.removeEventListener('pointerdown', down);
